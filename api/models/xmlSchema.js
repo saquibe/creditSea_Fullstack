@@ -24,4 +24,4 @@ const creditReportSchema = new mongoose.Schema({
   ],
 });
 
-module.exports = mongoose.model("CreditReport", creditReportSchema);
+module.exports = mongoose.model("CreditReports", creditReportSchema);

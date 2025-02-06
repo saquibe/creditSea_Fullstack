@@ -2,31 +2,25 @@ const xml2js = require("xml2js");
 const fs = require("fs");
 const CreditReport = require("../models/xmlSchema");
 
-// Controller to handle XML file upload and data extraction
 exports.uploadXML = async (req, res) => {
   try {
-    const file = req.file; // Assuming you're using multer for file uploads
+    const file = req.file;
     if (!file) {
       return res.status(400).json({ message: "No file uploaded" });
     }
 
-    // Read the XML file
     const xmlData = fs.readFileSync(file.path, "utf8");
 
-    // Parse XML data
     xml2js.parseString(xmlData, async (err, result) => {
       if (err) {
         return res.status(500).json({ message: "Error parsing XML" });
       }
 
-      // Extract data from parsed XML (this will depend on the XML structure)
       const extractedData = extractData(result);
 
-      // Save to MongoDB
       const creditReport = new CreditReport(extractedData);
       await creditReport.save();
 
-      // Respond with success
       res
         .status(201)
         .json({ message: "File processed successfully", data: creditReport });
@@ -37,55 +31,75 @@ exports.uploadXML = async (req, res) => {
   }
 };
 
-// Controller to retrieve reports
 exports.getReports = async (req, res) => {
   try {
     const reports = await CreditReport.find();
-    res.status(200).json(reports);
+    res.status(200).json({ reports, count: reports.length });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
   }
 };
 
-// Function to extract data from parsed XML
 const extractData = (xml) => {
-  // Implement the logic to extract required fields from the XML structure
-  return {
-    name: xml?.CreditReport?.BasicDetails[0]?.Name[0],
-    mobilePhone: xml?.CreditReport?.BasicDetails[0]?.MobilePhone[0],
-    pan: xml.CreditReport?.BasicDetails[0]?.PAN[0],
-    creditScore: parseInt(
-      xml?.CreditReport?.BasicDetails[0]?.CreditScore[0] || 0
-    ),
-    reportSummary: {
-      totalAccounts: parseInt(
-        xml?.CreditReport?.ReportSummary[0]?.TotalAccounts[0] || 0
+  try {
+    const applicantDetails =
+      xml?.INProfileResponse?.Current_Application?.[0]
+        ?.Current_Application_Details?.[0]?.Current_Applicant_Details?.[0];
+
+    const summary =
+      xml?.INProfileResponse?.CAIS_Account?.[0]?.CAIS_Summary?.[0]
+        ?.Credit_Account?.[0];
+
+    const outstandingBalance =
+      xml?.INProfileResponse?.CAIS_Account?.[0]?.CAIS_Summary?.[0]
+        ?.Total_Outstanding_Balance?.[0];
+
+    const panDetails =
+      xml?.INProfileResponse?.CAIS_Account?.[0]?.CAIS_Account_DETAILS?.[0]
+        ?.CAIS_Holder_ID_Details?.[0]?.Income_TAX_PAN?.[0] || "";
+
+    const accounts =
+      xml?.INProfileResponse?.CAIS_Account?.[0]?.CAIS_Account_DETAILS?.map(
+        (account) => ({
+          bankName: account?.Subscriber_Name?.[0],
+          accountNumber: account?.Account_Number?.[0],
+          currentBalance: parseFloat(account?.Current_Balance?.[0] || 0),
+          amountOverdue: parseFloat(account?.Amount_Past_Due?.[0] || 0),
+        })
+      ) || [];
+
+    return {
+      name: `${applicantDetails?.First_Name?.[0] || ""} ${
+        applicantDetails?.Last_Name?.[0] || ""
+      }`.trim(),
+      mobilePhone: applicantDetails?.MobilePhoneNumber?.[0] || "",
+      pan: panDetails || "",
+      creditScore: parseInt(
+        xml?.INProfileResponse?.SCORE?.[0]?.BureauScore?.[0] || 0
       ),
-      activeAccounts: parseInt(
-        xml?.CreditReport?.ReportSummary[0]?.ActiveAccounts[0] || 0
-      ),
-      closedAccounts: parseInt(
-        xml?.CreditReport?.ReportSummary[0]?.ClosedAccounts[0] || 0
-      ),
-      currentBalance: parseFloat(
-        xml?.CreditReport?.ReportSummary[0]?.CurrentBalance[0] || 0
-      ),
-      securedAmount: parseFloat(
-        xml?.CreditReport?.ReportSummary[0]?.SecuredAccountsAmount[0] || 0
-      ),
-      unsecuredAmount: parseFloat(
-        xml?.CreditReport?.ReportSummary[0]?.UnsecuredAccountsAmount[0] || 0
-      ),
-      last7DaysEnquiries: parseInt(
-        xml?.CreditReport?.ReportSummary[0]?.Last7DaysCreditEnquiries[0] || 0
-      ),
-    },
-    creditAccounts: xml?.CreditReport?.CreditAccounts?.map((account) => ({
-      bankName: account?.BankName[0],
-      accountNumber: account?.AccountNumber[0],
-      currentBalance: parseFloat(account?.CurrentBalance[0]),
-      amountOverdue: parseFloat(account?.AmountOverdue[0]),
-    })),
-  };
+      reportSummary: {
+        totalAccounts: parseInt(summary?.CreditAccountTotal?.[0] || 0),
+        activeAccounts: parseInt(summary?.CreditAccountActive?.[0] || 0),
+        closedAccounts: parseInt(summary?.CreditAccountClosed?.[0] || 0),
+        currentBalance: parseFloat(
+          outstandingBalance?.Outstanding_Balance_All?.[0] || 0
+        ),
+        securedAmount: parseFloat(
+          outstandingBalance?.Outstanding_Balance_Secured?.[0] || 0
+        ),
+        unsecuredAmount: parseFloat(
+          outstandingBalance?.Outstanding_Balance_UnSecured?.[0] || 0
+        ),
+        last7DaysEnquiries: parseInt(
+          xml?.INProfileResponse?.TotalCAPS_Summary?.[0]
+            ?.TotalCAPSLast7Days?.[0] || 0
+        ),
+      },
+      creditAccounts: accounts,
+    };
+  } catch (error) {
+    console.error("Error extracting data:", error);
+    return {};
+  }
 };

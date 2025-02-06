@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/xml"; // Adjust the URL if needed
+const API_URL = "http://localhost:5000/xml";
 
 export const uploadXML = async (file) => {
   const formData = new FormData();

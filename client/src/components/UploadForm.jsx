@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { uploadXML } from "../services/api";
-import "./UploadForm.css"; // Import the CSS file for styling
+import "./UploadForm.css";
 
 const UploadForm = ({ onUploadSuccess }) => {
   const [file, setFile] = useState(null);
@@ -20,8 +20,8 @@ const UploadForm = ({ onUploadSuccess }) => {
 
     try {
       await uploadXML(file);
-      onUploadSuccess(); // Notify parent component of success
-      setFile(null); // Reset file input
+      onUploadSuccess();
+      setFile(null);
     } catch (err) {
       setError("Error uploading file. Please try again.");
     }
@@ -32,7 +32,6 @@ const UploadForm = ({ onUploadSuccess }) => {
       <input type="file" accept=".xml" onChange={handleFileChange} />
       <button type="submit">Upload XML</button>
       {error && <p className="error">{error}</p>}{" "}
-      {/* Use error class for styling */}
     </form>
   );
 };

@@ -1,13 +1,14 @@
 import React from "react";
-import "./XmlReport.css"; // Import the CSS file for styling
+import "./XmlReport.css";
 
 const XmlReport = ({ report }) => {
+  console.log(report, "repoprt");
+
   if (!report) return null;
 
   return (
     <div className="report">
       {" "}
-      {/* Add a class for styling */}
       <h2>Report Summary</h2>
       <h3>Basic Details</h3>
       <p>Name: {report.name}</p>
@@ -26,7 +27,6 @@ const XmlReport = ({ report }) => {
       {report.creditAccounts.map((account, index) => (
         <div key={index} className="credit-account">
           {" "}
-          {/* Add a class for credit account styling */}
           <p>Bank Name: {account.bankName}</p>
           <p>Account Number: {account.accountNumber}</p>
           <p>Current Balance: {account.currentBalance}</p>

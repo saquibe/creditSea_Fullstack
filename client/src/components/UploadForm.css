@@ -1,11 +1,8 @@
-/* UploadForm.css */
-
-/* Form Styles */
 form {
   display: flex;
   flex-direction: column;
-  gap: 15px; /* Space between elements */
-  margin-bottom: 20px; /* Space below the form */
+  gap: 15px;
+  margin-bottom: 20px;
 }
 
 input[type="file"] {
@@ -17,8 +14,8 @@ input[type="file"] {
 }
 
 input[type="file"]:focus {
-  border-color: #007bff; /* Change border color on focus */
-  outline: none; /* Remove default outline */
+  border-color: #007bff;
+  outline: none;
 }
 
 button {
@@ -33,16 +30,15 @@ button {
 }
 
 button:hover {
-  background-color: #0056b3; /* Darker blue on hover */
+  background-color: #0056b3;
 }
 
 p {
-  margin: 0; /* Remove default margin */
+  margin: 0;
 }
 
-/* Error Message Styles */
 p.error {
   color: red;
   font-weight: bold;
-  margin-top: 10px; /* Space above error message */
+  margin-top: 10px;
 }

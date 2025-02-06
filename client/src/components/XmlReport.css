@@ -1,6 +1,3 @@
-/* XmlReport.css */
-
-/* Report Container Styles */
 .report {
   margin-top: 20px;
   padding: 15px;
@@ -9,7 +6,6 @@
   background-color: #f9f9f9;
 }
 
-/* Heading Styles */
 .report h2 {
   color: #333;
   margin-bottom: 10px;
@@ -20,13 +16,11 @@
   margin-top: 15px;
 }
 
-/* Paragraph Styles */
 .report p {
   margin: 5px 0;
   color: #555;
 }
 
-/* Credit Account Styles */
 .credit-account {
   margin-top: 10px;
   padding: 10px;
