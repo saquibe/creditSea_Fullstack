@@ -9,7 +9,8 @@ connectDB();
 
 server.use(
   cors({
-    origin: "http://localhost:5173",
+    origin:
+      "https://api-3q3jadv2q-mohammad-saquibs-projects-83cdffac.vercel.app/",
     methods: ["GET", "POST"],
     credentials: true,
   })
