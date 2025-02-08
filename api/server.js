@@ -14,14 +14,10 @@ const allowedOrigins = [
 
 server.use(
   cors({
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true, // If using cookies or authentication
+    origin:
+      "https://api-3q3jadv2q-mohammad-saquibs-projects-83cdffac.vercel.app/",
+    methods: ["GET", "POST"],
+    credentials: true,
   })
 );
 
