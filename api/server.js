@@ -9,8 +9,7 @@ connectDB();
 
 server.use(
   cors({
-    origin:
-      ["https://saquib-credit-sea.vercel.app/" , "https://api-3q3jadv2q-mohammad-saquibs-projects-83cdffac.vercel.app/"],
+    origin: "https://api-3q3jadv2q-mohammad-saquibs-projects-83cdffac.vercel.app/",
     methods: ["GET", "POST"],
     credentials: true,
   })
