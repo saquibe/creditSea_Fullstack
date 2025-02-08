@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/xml";
+const API_URL = process.env.REACT_APP_API_URL;
 
 export const uploadXML = async (file) => {
   const formData = new FormData();
