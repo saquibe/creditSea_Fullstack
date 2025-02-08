@@ -14,7 +14,6 @@ const allowedOrigins = [
 
 server.use(
   cors({
-<<<<<<< HEAD
     origin: (origin, callback) => {
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
@@ -23,11 +22,6 @@ server.use(
       }
     },
     credentials: true, // If using cookies or authentication
-=======
-    origin: "https://api-3q3jadv2q-mohammad-saquibs-projects-83cdffac.vercel.app/",
-    methods: ["GET", "POST"],
-    credentials: true,
->>>>>>> 7a18c64c862f00d828c7a50f66a9bcd94f5e109c
   })
 );
 
