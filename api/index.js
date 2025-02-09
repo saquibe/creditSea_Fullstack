@@ -35,10 +35,10 @@ server.get("/CreditSea", (req, res) => {
   res.json("CreditSea");
 });
 
-server.use(express.static(path.join(__dirname, "/client/dist")));
+server.use(express.static(path.join(__dirname, "../client/dist")));
 
 server.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
+  res.sendFile(path.join(__dirname, "../client/dist", "index.html"));
 });
 
 server.listen(PORT, () => {
