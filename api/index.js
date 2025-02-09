@@ -10,7 +10,7 @@ connectDB();
 
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://api-3q3jadv2q-mohammad-saquibs-projects-83cdffac.vercel.app/",
+  "https://saquib-credit-sea.vercel.app/",
 ];
 
 server.use(
