@@ -3,6 +3,7 @@ const connectDB = require("./services/Database");
 const XMLRoutes = require("./routes/Routes");
 const cors = require("cors");
 const server = express();
+const path = require("path");
 const PORT = process.env.PORT || 5000;
 
 connectDB();
@@ -25,11 +26,19 @@ server.use(
   })
 );
 
+// const __dirname = path.resolve();
+
 server.use(express.json());
 server.use("/xml", XMLRoutes);
 
 server.get("/CreditSea", (req, res) => {
   res.json("CreditSea");
+});
+
+server.use(express.static(path.join(__dirname, "/client/dist")));
+
+server.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
 });
 
 server.listen(PORT, () => {
