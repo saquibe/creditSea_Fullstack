@@ -2,8 +2,6 @@ import React from "react";
 import "./XmlReport.css";
 
 const XmlReport = ({ report }) => {
-  console.log(report, "repoprt");
-
   if (!report) return null;
 
   return (
