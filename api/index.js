@@ -8,23 +8,20 @@ const PORT = process.env.PORT || 5000;
 
 connectDB();
 
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://saquib-credit-sea.vercel.app/",
-];
+// const allowedOrigins = [
+//   "http://localhost:5173",
+//   "https://saquib-credit-sea.vercel.app/",
+// ];
 
 server.use(
   cors({
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true, // If using cookies or authentication
+    origin: "https://saquib-credit-sea.vercel.app", // Your Vercel frontend URL
+    methods: "GET,POST,PUT,DELETE",
+    allowedHeaders: "Content-Type,Authorization",
   })
 );
+
+server.use(cors({ origin: "*" }));
 
 // const __dirname = path.resolve();
 
